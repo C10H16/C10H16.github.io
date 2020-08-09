@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          设计模式概述 - Hazuki | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/设计模式/设计模式概述/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_header.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#设计模式" title="设计模式">设计模式</a>
+                            
+                        </div>
+                        <h1>设计模式概述</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Hazuki on
+                            2019-04-15
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Matrix</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2><span id="uml-构造块和符号">UML 构造块和符号</span></h2>
+<h3><span id="事务">事务</span></h3>
+<p>事务主要包括：</p>
+<ul>
+<li>结构事务</li>
+<li>行为事务</li>
+<li>分组事务</li>
+<li>注释事务</li>
+</ul>
+<h4><span id="结构事务">结构事务</span></h4>
+<h5><span id="类符号">类符号</span></h5>
+<p>类符号包括名称、属性、方法和可选的附加组件四部分。</p>
+<p>使用符号来表示访问权限</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">访问权限修饰词</th>
+<th style="text-align:center">符号</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">private</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:center">protected</td>
+<td style="text-align:center">#</td>
+</tr>
+<tr>
+<td style="text-align:center">public</td>
+<td style="text-align:center">+</td>
+</tr>
+<tr>
+<td style="text-align:center">无修饰词</td>
+<td style="text-align:center">无符号</td>
+</tr>
+</tbody>
+</table>
+<h5><span id="对象符号">对象符号</span></h5>
+<p>表示对象的方式与类相同，唯一的区别是对象的名称下面有一条下划线。</p>
+<h5><span id="接口符号">接口符号</span></h5>
+<p>接口用圆形来表示，名称一般写在圆形下面。接口主要用来描述那些没有实际实现的功能（方法）</p>
+<h5><span id="协作符号">协作符号</span></h5>
+<p>使用虚线椭圆来表示，椭圆的中间写着它的名称。用于表示一组对象共同完成的某种用途</p>
+<h5><span id="用例符号">用例符号</span></h5>
+<p>使用包含名称的椭圆形来表示，能够代表多种不同的用途，一般用来表述系统的某种高级功能。</p>
+<h5><span id="参与者符号">参与者符号</span></h5>
+<p>表示在内务或外部与系统进行交互的某些实体。在用例图中参与者一般用于描述内部或外部的实体。</p>
+<h5><span id="初始状态符号">初始状态符号</span></h5>
+<p>定义为一个过程的起点</p>
+<h5><span id="最终状态符号">最终状态符号</span></h5>
+<p>用来显示一个过程的终点</p>
+<h5><span id="主动类符号">主动类符号</span></h5>
+<p>主动类通常用来描述系统的并发行为</p>
+<h5><span id="组件符号">组件符号</span></h5>
+<p>图形中间为组件符号的名称，必要时能够根据需要在符号上添加额外的元素。组件符号通常用来表示系统中由部分特定的 UML 图封装构成的系统组件。</p>
+<h5><span id="节点符号">节点符号</span></h5>
+<p>节点表示系统中的一个物理组件。</p>
+<p><img src="/img/article/uml1.jpg" alt=""></p>
+<h4><span id="行为事务">行为事务</span></h4>
+<p>UML具有表征软件和非软件 系统的动态部分的功能，这些功能特性包括交互符号和状态机符号。</p>
+<h5><span id="交互符号">交互符号</span></h5>
+<p>代表两个UNL组件之间的信息交换，由一组在元素间交换消息用于完成特定任务的行为构成。</p>
+<p>基本序列图表示法：</p>
+<ul>
+<li>消息：消息是表示对象之间通信的箭头。通常消息表示为对象之间带箭头的线。</li>
+<li>对象生命线：对象下面的垂直虚线。只有创建完对象之后，才会有对象生命线。</li>
+<li>销毁对象：在需要结束对象生命周期的时候，使用标有 <code>&lt;&lt;destory&gt;&gt;</code> 的符号指向终点。</li>
+</ul>
+<p><img src="/img/article/uml2.jpg" alt=""></p>
+<h4><span id="状态机符号">状态机符号</span></h4>
+<p>主要用于描述组件在其生命周期中的不同状态。</p>
+<p><img src="/img/article/uml3.jpg" alt=""></p>
+<p>状态机展示了对象在其生命周期过程中对事件进行响应所产生的状态序列，以及对各种事件响应序列的集合。一个状态是对象在生命周期内满足某个条件、执行特定任务、等待外部事件响应等事件时的一种顺势状况。</p>
+<p>事件是理解状态机产生的关键因素。对于一个状态机，一个事件是对象在不同状态之间转换的出发条件。</p>
+<p>转换过程是对象在两种状态之间变化的关系。包括以下特征：</p>
+<ul>
+<li>状态源</li>
+<li>事件触发器</li>
+<li>活动</li>
+<li>目标状态</li>
+</ul>
+<p>自我转换是源状态和目标状态相同的转换过程。这时活动主要是执行特定程序，或对基本状态（状态机条件核实）进行计算。活动也可能包括某种操作、创建或销毁其他对象，或发送信号给其他对象。</p>
+<p>自状态是一个嵌套在另一个状态中的状态。包含子状态的状态称为复合状态。没有子状态的状态又叫简单状态。子状态可以在任何层级进行嵌套。</p>
+<h4><span id="分组事物">分组事物</span></h4>
+<p>包是唯一一个分组事物，用来将结构和行为事物进行分类。</p>
+<h4><span id="注释事物">注释事物</span></h4>
+<p>注释符号</p>
+<p><img src="/img/article/uml4.jpg" alt=""></p>
+<h3><span id="关系">关系</span></h3>
+<p>主要包括：依赖关系、泛化关系、关联关系和扩展关系四类。<br>
+<img src="/img/article/uml5.jpg" alt=""></p>
+<h4><span id="依赖关系">依赖关系</span></h4>
+<p>定义了不同对象之间相互影响的关系。依赖关系描述的主要内容是当两个元素之中的一个发生变化，另一个会相应地发生变化。依赖关系使用带虚线的箭头表示，由依赖的元素指向独立的元素。</p>
+<h4><span id="泛化关系">泛化关系</span></h4>
+<p>泛化关系描述了面向对象世界中的继承关系，即父类与子类的关系。使用一个空心箭头来表示，箭头指向的为父类，另一端为子类。</p>
+<h4><span id="关联关系">关联关系</span></h4>
+<p>描述了 UML 图中元素的关联方式，简单地说，它描述了多少个元素正在参与运算。</p>
+<p>描述类之间关系最抽象的方式是使用关联关系连接。关联关系体现的是一个实例向另一个实例发送消息的能力，通常由一个指针或引用实例变量实现。关联关系在类之间通过一个指示关联方向的箭头表示。如果线段两端都是箭头，则表示双向的关联关系。两个端点表示相互关联的两个元素，同时能够在线上进行编号，来展示多个对象相互关联。</p>
+<h5><span id="依赖关系和关联关系的区别">依赖关系和关联关系的区别</span></h5>
+<p>当我们将对某个类的引用作为当前类特定操作或函数的一部分时，通常会使用依赖关系。关联关系通常由一个指针或引用实例变量实现。</p>
+<h4><span id="组合关系与聚合关系">组合关系与聚合关系</span></h4>
+<p>组合关系表示类之间一种非常强烈的从属关系。使用黑色实心菱形来表示。例如，class A 是整体类，class B 是 A 的一部分，则使用黑色实心菱形从 B 指向 A。</p>
+<p>聚合关系中，整体类要不部分类起到更重要的作用，使用空心菱形表示聚合关系。聚合关系描述类之间存在部分和整体的关系。</p>
+<p>例如，一个人有心脏、肝脏等器官，对这种关系建模就是组合关系。一个人拥有一辆车、一栋房子、一台电脑，这就是聚合关系。</p>
+<ul>
+<li>聚合关系是一种若连接，对象能够彼此独立创建</li>
+<li>组合关系是一种强连接，部分对象在其他对象中创建</li>
+<li>在聚合关系中对象可以彼此独立存在。</li>
+</ul>
+<h2><span id="设计模式简介">设计模式简介</span></h2>
+<h3><span id="分类">分类</span></h3>
+<h4><span id="创造性设计模式">创造性设计模式</span></h4>
+<p>注重与完成对象的实例化。相对于一般直接实例化对象，设计模式会根据实际情况有选择性地完成对象的实例化。这会为业务逻辑高度复杂化的情景提供足够的灵活性。</p>
+<p>包括：</p>
+<ul>
+<li>抽象工厂设计模式</li>
+<li>生成器设计模式</li>
+<li>工厂方法设计模式</li>
+<li>原型设计模式</li>
+<li>单例设计模式</li>
+</ul>
+<h4><span id="结构型模式">结构型模式</span></h4>
+<p>用于指导我们完成代码的结构划分，能够让代码更加清晰和易于理解，提高整体的可维护性。</p>
+<p>包括：</p>
+<ul>
+<li>适配器设计模式</li>
+<li>桥接设计模式</li>
+<li>组合设计模式</li>
+<li>装饰设计模式</li>
+<li>门面设计模式</li>
+<li>享元设计模式</li>
+<li>代理设计模式</li>
+</ul>
+<h4><span id="行为型模式">行为型模式</span></h4>
+<p>主要用于定义对象之间的通信和控制流程。</p>
+<ul>
+<li>职责链设计模式</li>
+<li>命令设计模式</li>
+<li>解释器设计模式</li>
+<li>迭代器设计模式</li>
+<li>中介者设计模式</li>
+<li>备忘录设计模式</li>
+<li>观察者设计模式</li>
+<li>策略设计模式</li>
+<li>状态设计模式</li>
+<li>模板方法设计模式</li>
+<li>访问者设计模式</li>
+</ul>
+<h3><span id="学习设计模式需要注意的问题">学习设计模式需要注意的问题</span></h3>
+<ul>
+<li>模式的名称是什么</li>
+<li>模式的类型是什么</li>
+<li>模式的目的（作用）是什么</li>
+<li>该模式的别名</li>
+<li>什么情况下使用该模式</li>
+<li>能否例举该模式的基本示例</li>
+<li>该设计模式的 UML 图是什么样的？该模式的图形化展示是什么样的？具体是使用类图还是交互图？</li>
+<li>都有那些对象在模式中参与活动？最好能够列出在设计模式中使用的对象和类，并说明它们各自的角色。</li>
+<li>在模式中使用的类与对象之间是如何进行交互的？</li>
+<li>通过应用设计模式能够获得哪种效果？是否有其他副作用？如何权衡利弊以选择应用该模式？</li>
+<li>如何实现该模式？</li>
+<li>与该模式相关的模式是什么？如果还有其他模式和此模式相近，能否说明几种模式之间的异同？</li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/socket/网络编程/UNIX网络编程笔记/" data-toggle="tooltip" data-placement="top" title="UNIX网络编程笔记">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/算法/C/动态规划/0-1背包问题/" data-toggle="tooltip" data-placement="top" title="0-1背包问题">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><span id="uml-&#x6784;&#x9020;&#x5757;&#x548C;&#x7B26;&#x53F7;">UML &#x6784;&#x9020;&#x5757;&#x548C;&#x7B26;&#x53F7;</span></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text"><span id="&#x4E8B;&#x52A1;">&#x4E8B;&#x52A1;</span></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text"><span id="&#x7ED3;&#x6784;&#x4E8B;&#x52A1;">&#x7ED3;&#x6784;&#x4E8B;&#x52A1;</span></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.1.</span> <span class="toc-nav-text"><span id="&#x7C7B;&#x7B26;&#x53F7;">&#x7C7B;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.2.</span> <span class="toc-nav-text"><span id="&#x5BF9;&#x8C61;&#x7B26;&#x53F7;">&#x5BF9;&#x8C61;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.3.</span> <span class="toc-nav-text"><span id="&#x63A5;&#x53E3;&#x7B26;&#x53F7;">&#x63A5;&#x53E3;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.4.</span> <span class="toc-nav-text"><span id="&#x534F;&#x4F5C;&#x7B26;&#x53F7;">&#x534F;&#x4F5C;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.5.</span> <span class="toc-nav-text"><span id="&#x7528;&#x4F8B;&#x7B26;&#x53F7;">&#x7528;&#x4F8B;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.6.</span> <span class="toc-nav-text"><span id="&#x53C2;&#x4E0E;&#x8005;&#x7B26;&#x53F7;">&#x53C2;&#x4E0E;&#x8005;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.7.</span> <span class="toc-nav-text"><span id="&#x521D;&#x59CB;&#x72B6;&#x6001;&#x7B26;&#x53F7;">&#x521D;&#x59CB;&#x72B6;&#x6001;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.8.</span> <span class="toc-nav-text"><span id="&#x6700;&#x7EC8;&#x72B6;&#x6001;&#x7B26;&#x53F7;">&#x6700;&#x7EC8;&#x72B6;&#x6001;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.9.</span> <span class="toc-nav-text"><span id="&#x4E3B;&#x52A8;&#x7C7B;&#x7B26;&#x53F7;">&#x4E3B;&#x52A8;&#x7C7B;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.10.</span> <span class="toc-nav-text"><span id="&#x7EC4;&#x4EF6;&#x7B26;&#x53F7;">&#x7EC4;&#x4EF6;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.11.</span> <span class="toc-nav-text"><span id="&#x8282;&#x70B9;&#x7B26;&#x53F7;">&#x8282;&#x70B9;&#x7B26;&#x53F7;</span></span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.2.</span> <span class="toc-nav-text"><span id="&#x884C;&#x4E3A;&#x4E8B;&#x52A1;">&#x884C;&#x4E3A;&#x4E8B;&#x52A1;</span></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.2.1.</span> <span class="toc-nav-text"><span id="&#x4EA4;&#x4E92;&#x7B26;&#x53F7;">&#x4EA4;&#x4E92;&#x7B26;&#x53F7;</span></span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.3.</span> <span class="toc-nav-text"><span id="&#x72B6;&#x6001;&#x673A;&#x7B26;&#x53F7;">&#x72B6;&#x6001;&#x673A;&#x7B26;&#x53F7;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.4.</span> <span class="toc-nav-text"><span id="&#x5206;&#x7EC4;&#x4E8B;&#x7269;">&#x5206;&#x7EC4;&#x4E8B;&#x7269;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.5.</span> <span class="toc-nav-text"><span id="&#x6CE8;&#x91CA;&#x4E8B;&#x7269;">&#x6CE8;&#x91CA;&#x4E8B;&#x7269;</span></span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text"><span id="&#x5173;&#x7CFB;">&#x5173;&#x7CFB;</span></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text"><span id="&#x4F9D;&#x8D56;&#x5173;&#x7CFB;">&#x4F9D;&#x8D56;&#x5173;&#x7CFB;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.2.</span> <span class="toc-nav-text"><span id="&#x6CDB;&#x5316;&#x5173;&#x7CFB;">&#x6CDB;&#x5316;&#x5173;&#x7CFB;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.3.</span> <span class="toc-nav-text"><span id="&#x5173;&#x8054;&#x5173;&#x7CFB;">&#x5173;&#x8054;&#x5173;&#x7CFB;</span></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.3.1.</span> <span class="toc-nav-text"><span id="&#x4F9D;&#x8D56;&#x5173;&#x7CFB;&#x548C;&#x5173;&#x8054;&#x5173;&#x7CFB;&#x7684;&#x533A;&#x522B;">&#x4F9D;&#x8D56;&#x5173;&#x7CFB;&#x548C;&#x5173;&#x8054;&#x5173;&#x7CFB;&#x7684;&#x533A;&#x522B;</span></span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.4.</span> <span class="toc-nav-text"><span id="&#x7EC4;&#x5408;&#x5173;&#x7CFB;&#x4E0E;&#x805A;&#x5408;&#x5173;&#x7CFB;">&#x7EC4;&#x5408;&#x5173;&#x7CFB;&#x4E0E;&#x805A;&#x5408;&#x5173;&#x7CFB;</span></span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><span id="&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;&#x7B80;&#x4ECB;">&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;&#x7B80;&#x4ECB;</span></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text"><span id="&#x5206;&#x7C7B;">&#x5206;&#x7C7B;</span></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.1.</span> <span class="toc-nav-text"><span id="&#x521B;&#x9020;&#x6027;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;">&#x521B;&#x9020;&#x6027;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.2.</span> <span class="toc-nav-text"><span id="&#x7ED3;&#x6784;&#x578B;&#x6A21;&#x5F0F;">&#x7ED3;&#x6784;&#x578B;&#x6A21;&#x5F0F;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.3.</span> <span class="toc-nav-text"><span id="&#x884C;&#x4E3A;&#x578B;&#x6A21;&#x5F0F;">&#x884C;&#x4E3A;&#x578B;&#x6A21;&#x5F0F;</span></span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text"><span id="&#x5B66;&#x4E60;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;&#x9700;&#x8981;&#x6CE8;&#x610F;&#x7684;&#x95EE;&#x9898;">&#x5B66;&#x4E60;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;&#x9700;&#x8981;&#x6CE8;&#x610F;&#x7684;&#x95EE;&#x9898;</span></span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#设计模式" title="设计模式">设计模式</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://github.com/TangBean" target="_blank">豆豆的GitHub</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/gothicll">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/C10H16">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Hazuki 2020 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://yoursite.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

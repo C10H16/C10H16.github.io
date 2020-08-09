@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          UNIX网络编程笔记 - Hazuki | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/socket/网络编程/UNIX网络编程笔记/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_header.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#socket" title="socket">socket</a>
+                            
+                              <a class="tag" href="/tags/#网络编程" title="网络编程">网络编程</a>
+                            
+                        </div>
+                        <h1>UNIX网络编程笔记</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Hazuki on
+                            2019-06-23
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Matrix</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h4><span id="tcp连接的分组交换">TCP连接的分组交换</span></h4>
+<p><img src="/img/article/1-1.jpg" alt=""></p>
+<h4><span id="time_wait状态">TIME_WAIT状态</span></h4>
+<p>主动执行关闭的一端主动执行这个状态，该端点停留在这个状态的持续时间为最长分节生命期（maximum segment lifetime, MSL）的两倍，有时被称为2SML。</p>
+<p>存在的理由：</p>
+<ul>
+<li>可靠地实现TCP全双工连接的终止
+<ul>
+<li>假设上图中最终的ACK丢失，则服务器端会重发FIN来请求客户的ACK。如果客户不维护这些信息，它将响应以一个RST，该分解被服务器解释成一个错误。如果TCP要彻底终止某个连接上两个方向的数据流（全双工关闭），那么它需要正确处理四次挥手中任何一个分节丢失的状况。主动执行关闭的一端可能不得不重发ACK，所以需要进入TIME_WAIT状态。</li>
+</ul>
+</li>
+<li>允许老的重复分节在网络中消逝
+<ul>
+<li>假设在某一IP地址的某一端口上有一个连接，该连接关闭之后过了一段时间又再次在该IP和端口上建立了另一个连接，这个连接称为前一个连接的化身。TCP必须防止来自某个连接的老的重复分组在该连接已终止后再现，从而被误解成属于同一连接的某个新的化身。因此，TCP将不给处于TIME_WAIT状态的连接发起新的化身。而且TIME_WAIT的时间为2SML，足以让这个连接的分组都被丢弃。这样，可以保证在建立一个新的连接时，之前连接的老的重复的分组都已经在网络中消逝了。</li>
+</ul>
+</li>
+</ul>
+<h4><span id="ipv4套接字地址结构">IPv4套接字地址结构</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &lt;netinet/in.h&gt;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">in_addr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">in_addr_t</span> s_addr; <span class="comment">// 32-bit IPv4 address network byte ordered</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">unit8_t</span> sin_len; <span class="comment">// length of structure(16)</span></span><br><span class="line">    sa_family sin_family; <span class="comment">// AF_INET</span></span><br><span class="line">    <span class="keyword">in_port_t</span> sin_port; <span class="comment">// 16-bit TCP or UDP port number network byte ordered</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">in_addr</span> <span class="title">sin_addr</span>;</span> <span class="comment">// 32-bit IPv4 address network byte ordered</span></span><br><span class="line">    <span class="keyword">char</span> sin_zero[<span class="number">8</span>]; <span class="comment">// unused</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4><span id="posix-定义的数据类型">POSIX 定义的数据类型</span></h4>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>说明</th>
+<th>头文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int8_t</td>
+<td>带符号的8位整数</td>
+<td>&lt;sys/types.h&gt;</td>
+</tr>
+<tr>
+<td>uint8_t</td>
+<td>无符号的8位整数</td>
+<td>&lt;sys/types.h&gt;</td>
+</tr>
+<tr>
+<td>int16_t</td>
+<td>带符号的16位整数</td>
+<td>&lt;sys/types.h&gt;</td>
+</tr>
+<tr>
+<td>uint16_t</td>
+<td>无符号的16位整数</td>
+<td>&lt;sys/types.h&gt;</td>
+</tr>
+<tr>
+<td>int 32_t</td>
+<td>带符号的32位整数</td>
+<td>&lt;sys/types.h&gt;</td>
+</tr>
+<tr>
+<td>uint32_t</td>
+<td>无符号的32位整数</td>
+<td>&lt;sys/types.h&gt;</td>
+</tr>
+<tr>
+<td>sa_family_t</td>
+<td>套接字地址结构的地址族</td>
+<td>&lt;sys/socket.h&gt;</td>
+</tr>
+<tr>
+<td>socklen_t</td>
+<td>套接字地址结构的长度，一般为uint32_t</td>
+<td>&lt;sys/socket.h&gt;</td>
+</tr>
+<tr>
+<td>in_addr_t</td>
+<td>IPv4地址，一般为uint32_t</td>
+<td>&lt;netinet/in.h&gt;</td>
+</tr>
+<tr>
+<td>in_port_t</td>
+<td>TCP或UDP端口，一般为uint16_t</td>
+<td>&lt;netinet/in.h&gt;</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="通用套接字地址结构">通用套接字地址结构</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &lt;sys/socket.h&gt;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">uint8_t</span> sa_len;</span><br><span class="line">    <span class="keyword">sa_family_t</span> sa_family; <span class="comment">// address family: AF_XXX value</span></span><br><span class="line">    <span class="keyword">char</span> sa_data[<span class="number">14</span>]; <span class="comment">// protocol-specific address</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>调用<code>bind</code>等函数时，需要将特定协议的套接字地址结构的指针进行强制类型转换，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">serv</span>;</span> <span class="comment">//IPv4 socket address structure</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* fill in serv() */</span></span><br><span class="line"></span><br><span class="line">bind(socketfd, (struct sockaddr*) &amp;sockaddr_in, <span class="keyword">sizeof</span>(serv))</span><br></pre></td></tr></table></figure>
+<h4><span id="ipv6套接字地址结构">IPv6套接字地址结构</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">in6_addr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">uint8_t</span> s6_addr[<span class="number">16</span>]; <span class="comment">// 128-bit IPv6 address</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SIN6_LEN <span class="comment">// required for compile-time tests</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in6</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">uint8_t</span> sin6_len; <span class="comment">// length of this struct(28)</span></span><br><span class="line">    <span class="keyword">sa_family_t</span> sin6_family; <span class="comment">// AF_INET6</span></span><br><span class="line">    <span class="keyword">in_port_t</span> sin6_port; <span class="comment">// transport layer port# network byte ordered</span></span><br><span class="line">    <span class="keyword">uint32_t</span> sin6_flowinfo; <span class="comment">// flow information, undefined IPv6 address</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">in6_addr</span> <span class="title">sin6_addr</span>;</span> <span class="comment">// IPv6 address newtork byte ordered</span></span><br><span class="line">    <span class="keyword">uint32_t</span> sin6_scope_id; <span class="comment">// set of interfaces for a scope</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>如果系统支持套接字地址结构中的长度字段，那么 SIN6_LEN常值必须定义。</p>
+<h4><span id="新的通用套接字地址结构">新的通用套接字地址结构</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">socketaddr_storage</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">uint8_t</span> ss_len; <span class="comment">// length of this struct (implementation dependent)</span></span><br><span class="line">    <span class="keyword">sa_family_t</span> ss_family; <span class="comment">// address family:AF_XXX value</span></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    	implementation-dependent elements to provide:</span></span><br><span class="line"><span class="comment">    	a) alignment sufficient to fulfill the alignment requirements of</span></span><br><span class="line"><span class="comment">    	   all socket address types that the system supports</span></span><br><span class="line"><span class="comment">    	b) enough sotrage to hold anytype of socket address that the </span></span><br><span class="line"><span class="comment">    	   system supports</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="值-结果参数">值-结果参数</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_un</span> <span class="title">cli</span>;</span> <span class="comment">// Unix domain</span></span><br><span class="line"><span class="keyword">socklen_t</span> len;</span><br><span class="line"></span><br><span class="line">len = <span class="keyword">sizeof</span>(cli); <span class="comment">// len is a value</span></span><br><span class="line">getpeername(unixfd, (struct sockaddr*)&amp;cli, &amp;len); <span class="comment">// len may have changed</span></span><br></pre></td></tr></table></figure>
+<p>把套接字地质结构大小这个参数从一个整数改为指向某个整数变量的指针，其原因在于：当函数被调用时，结构大小时一个值，告诉内核该结构的大小，这样内核在写该结构时不会越界。当函数返回时，结构大小又是一个结果，它告诉进程内核在这个结构中存储了多少信息。这种类型的参数被称为<strong>值-结果</strong>参数</p>
+<h4><span id="字节排序函数">字节排序函数</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="keyword">uint16_t</span> htons(<span class="keyword">uint16_t</span> host16bitvalue);</span><br><span class="line"><span class="keyword">uint32_t</span> htonl(<span class="keyword">uint32_t</span> host32bitvalue); <span class="comment">// 均返回：网络字节序的值</span></span><br><span class="line"><span class="keyword">uint16_t</span> ntohs(<span class="keyword">uint16_t</span> net16bitvalue);</span><br><span class="line"><span class="keyword">uint32_t</span> ntohl(<span class="keyword">uint32_t</span> net16bitvalue); <span class="comment">// 均返回：主机字节序的值</span></span><br></pre></td></tr></table></figure>
+<h4><span id="字节操纵函数">字节操纵函数</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stirngs.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bzero</span><span class="params">(<span class="keyword">void</span> *dest, <span class="keyword">size_t</span> nbytes)</span></span>; <span class="comment">// 把目标字节串中指定数目的字节置为0</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bcopy</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *src, <span class="keyword">void</span> *dest, <span class="keyword">size_t</span> nbytes)</span></span>; </span><br><span class="line"><span class="comment">// 将指定数目的字节从源字节串转移到目标字节串</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bcmp</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *ptr1, <span class="keyword">const</span> <span class="keyword">void</span> *ptr2, <span class="keyword">size_t</span> nbytes)</span></span>; </span><br><span class="line"><span class="comment">// 比较两个任意的字节串，相同则返回0， 否则返回非0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">memset</span><span class="params">(<span class="keyword">void</span> *dest, <span class="keyword">int</span> c, <span class="keyword">size_t</span> len)</span></span>; <span class="comment">// 把目标字节串指定数目的字节置为c</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">memcpy</span><span class="params">(<span class="keyword">void</span> *dest, <span class="keyword">void</span> *src, <span class="keyword">size_t</span> nbytes)</span></span>; <span class="comment">// 同 bcopy</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">memcmp</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *ptr1, <span class="keyword">const</span> <span class="keyword">void</span> *ptr2, <span class="keyword">size_t</span> nbytes)</span></span>; </span><br><span class="line"><span class="comment">// 同bcmp，如果ptr1的字节大于ptr2,则返回值大于0，否则小于0</span></span><br></pre></td></tr></table></figure>
+<h4><span id="地址转换函数">地址转换函数</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">inet_aton</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>*strptr, struct in_addr *addrptr)</span></span>; </span><br><span class="line"><span class="comment">// 将C字符串转换为32位网络字节序二进制值，成功返回1，否则返回0</span></span><br><span class="line"><span class="keyword">in_addr_t</span> inet_addr(<span class="keyword">const</span> <span class="keyword">char</span> *strptr); </span><br><span class="line"><span class="comment">// 与inet_aton进行相同的转换，返回值位32位网络字节序二进制值。</span></span><br><span class="line"><span class="comment">// 出错时该函数返回INADDR_NONE，通常位32位均为1的值，因此255.255.255.255不能由该函数处理。</span></span><br><span class="line"><span class="function"><span class="keyword">char</span> *<span class="title">inet_ntoa</span><span class="params">(struct in_addr inaddr)</span></span>; </span><br><span class="line"><span class="comment">// 将一个32位网络字节序二进制IPv4地址转换为相应的点分十进制数串。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 头文件中定义</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INET_ADDRSTRLEN 16</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INET6_ADDR		STRLEN 46</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">inet_pton</span><span class="params">(<span class="keyword">int</span> family, <span class="keyword">const</span> <span class="keyword">char</span> *strptr, <span class="keyword">void</span> *addrptr)</span></span>; </span><br><span class="line"><span class="comment">// family参数可以是AF_INET，也可以是AF_INET6，成功返回1，输入不是有效的表达格式则为0，出错则为-1</span></span><br><span class="line"><span class="function"><span class="keyword">const</span> <span class="keyword">char</span> *<span class="title">inet_ntop</span><span class="params">(<span class="keyword">int</span> family, <span class="keyword">const</span> <span class="keyword">void</span> *addrptr, <span class="keyword">char</span> *strptr, <span class="keyword">size_t</span> len)</span></span>; </span><br><span class="line"><span class="comment">// 进行相反的转换，成功则为指向结果的指针，出错则为NULL</span></span><br></pre></td></tr></table></figure>
+<h4><span id="基本tcp套接字编程">基本TCP套接字编程</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">socket</span><span class="params">(<span class="keyword">int</span> family, <span class="keyword">int</span> type, <span class="keyword">int</span> protocol)</span></span>; </span><br><span class="line"><span class="comment">// 成功则返回非负描述符，出错则为-1</span></span><br></pre></td></tr></table></figure>
+<h5><span id="family常值">family常值</span></h5>
+<table>
+<thead>
+<tr>
+<th>family</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AF_INET</td>
+<td>IPv4协议</td>
+</tr>
+<tr>
+<td>AF_INET6</td>
+<td>IPv6协议</td>
+</tr>
+<tr>
+<td>AF_LOCAL</td>
+<td>Unix域协议</td>
+</tr>
+<tr>
+<td>AF_ROUTE</td>
+<td>路由套接字</td>
+</tr>
+<tr>
+<td>AF_KEY</td>
+<td>密钥套接字</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">connect</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> struct sockaddr *servaddr, <span class="keyword">socklen_t</span> addrlen)</span></span>; </span><br><span class="line"><span class="comment">// 若成功则返回0，出错则返回-1</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bind</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> struct sockaddr *myaddr, <span class="keyword">socklen_t</span> addrlen)</span></span>; </span><br><span class="line"><span class="comment">// 成功则为0， 出错则为-1</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lister</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">int</span> backlog)</span></span>; <span class="comment">// 若成功则为0， 出错则为-1</span></span><br><span class="line"><span class="comment">// 允许通过环境变量LISTENQ指定 backlog值的listen包裹函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Listen</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">int</span> backlog)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> *ptr;</span><br><span class="line">    <span class="keyword">if</span> ((ptr = getenv(<span class="string">"LISTENQ"</span>)) != <span class="literal">NULL</span>)</span><br><span class="line">        backlog = atoi(ptr);</span><br><span class="line">   	<span class="keyword">if</span> (listen(fd, backlog) &lt; <span class="number">0</span>)</span><br><span class="line">        err_sys(<span class="string">"listen eror"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5><span id="backlog">backlog</span></h5>
+<p>内核为每个监听套接字维护两个队列：</p>
+<ul>
+<li>
+<p>未完成连接队列</p>
+<ul>
+<li>服务器收到了SYN分节，在等待完成相应的TCP三次握手过程，套接字处于SYN_RCVD状态</li>
+</ul>
+</li>
+<li>
+<p>已完成连接的队列</p>
+<ul>
+<li>服务器完成了三次握手，这些套接字处于ESTABLISHED状态</li>
+</ul>
+</li>
+</ul>
+<p>backlog曾被定义为两个队列总和的最大值。源自Berkeley的实现给backlog增设了一个模糊音字，把它乘以1.5得到未处理队列的最大长度。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">accept</span><span class="params">(<span class="keyword">int</span> sockfd, struct sockaddr *cliaddr, <span class="keyword">socklen_t</span> *addrlen)</span></span>; </span><br><span class="line"><span class="comment">// 成功则为非负描述符，出错则为-1</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">close</span><span class="params">(<span class="keyword">int</span> sockfd)</span></span>; <span class="comment">// 若成功返回0，否则返回-1</span></span><br></pre></td></tr></table></figure>
+<h4><span id="并发服务器">并发服务器</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="keyword">pid_t</span> fork(<span class="keyword">void</span>); <span class="comment">// 返回：在子进程中为0，在父进程中为子进程ID，出错则为-1</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">execl</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">const</span> <span class="keyword">char</span> *arg0, ...<span class="comment">/*(char *) 0 */</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">execv</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">char</span> *<span class="keyword">const</span> *argv[])</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">execle</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *pathnbame, <span class="keyword">const</span> <span class="keyword">char</span> *arg0, ... <span class="comment">/* (char *) 0, chaar* const envp[] */</span> )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">execve</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *pathname, <span class="keyword">char</span> *<span class="keyword">const</span> argv[], <span class="keyword">char</span> *<span class="keyword">const</span> envp[])</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">execlp</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *filename, <span class="keyword">const</span> <span class="keyword">char</span> *arg0, ...<span class="comment">/*(char *) 0 */</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">execvp</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *filename, <span class="keyword">char</span> *<span class="keyword">const</span> argv[])</span></span>;</span><br></pre></td></tr></table></figure>
+<p>fork只调用一次，在父进程中返回一次，在子进程中也返回一次。</p>
+<p>可以用fork来创建进程自身的副本，也可以用fork创建一个进程的副本后调用exec函数把自身替换为新的程序</p>
+<p>典型并发服务器程序的轮廓</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pid_t</span> pid;</span><br><span class="line"><span class="keyword">int</span> listenfd, connfd;</span><br><span class="line">listenfd = socket(...);</span><br><span class="line">bind(listenfd, ...);</span><br><span class="line">listen(listenfd, LISTENQ);</span><br><span class="line"><span class="keyword">for</span>( ; ; )</span><br><span class="line">&#123;</span><br><span class="line">    connfd = Accept(listenfd, ...); <span class="comment">//probably blocks</span></span><br><span class="line">    <span class="keyword">if</span> ((pid = fork())== <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        close(listenfd); <span class="comment">// child closes listening socket</span></span><br><span class="line">        doit(connfd); <span class="comment">// process the request</span></span><br><span class="line">        close(connfd); <span class="comment">// done with this client;</span></span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>); <span class="comment">// child terminates</span></span><br><span class="line">    &#125;</span><br><span class="line">    close(connfd); <span class="comment">// parent close connected socket</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="getsockname-和-getpeername">getsockname 和 getpeername</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getsockname</span><span class="params">(<span class="keyword">int</span> sockfd, struct sockaddr *localaddr, <span class="keyword">socklen_t</span> *addrlen)</span></span>;</span><br><span class="line"><span class="comment">// 返回与套接字关联的本地协议地址</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getpeername</span><span class="params">(<span class="keyword">int</span> sockfd, struct sockaddr *peeraddr, <span class="keyword">socklen_t</span> *addrlen)</span></span>;</span><br><span class="line"><span class="comment">// 返回与套接字关联的外地协议地址</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 例：获取套接字的地址族</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sockfd_to_family</span><span class="params">(<span class="keyword">int</span> sockfd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_storage</span> <span class="title">ss</span>;</span></span><br><span class="line">    <span class="keyword">socklen_t</span> len;</span><br><span class="line">    len = <span class="keyword">sizeof</span>(ss);</span><br><span class="line">    <span class="keyword">if</span> (getsockname(sockfd, (struct sockaddr*)&amp;ss, &amp;len) &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> (<span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">return</span> (ss.ss_family);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/C/字节对齐/" data-toggle="tooltip" data-placement="top" title="字节对齐">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/设计模式/设计模式概述/" data-toggle="tooltip" data-placement="top" title="设计模式概述">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text"><span id="tcp&#x8FDE;&#x63A5;&#x7684;&#x5206;&#x7EC4;&#x4EA4;&#x6362;">TCP&#x8FDE;&#x63A5;&#x7684;&#x5206;&#x7EC4;&#x4EA4;&#x6362;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text"><span id="time_wait&#x72B6;&#x6001;">TIME_WAIT&#x72B6;&#x6001;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text"><span id="ipv4&#x5957;&#x63A5;&#x5B57;&#x5730;&#x5740;&#x7ED3;&#x6784;">IPv4&#x5957;&#x63A5;&#x5B57;&#x5730;&#x5740;&#x7ED3;&#x6784;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text"><span id="posix-&#x5B9A;&#x4E49;&#x7684;&#x6570;&#x636E;&#x7C7B;&#x578B;">POSIX &#x5B9A;&#x4E49;&#x7684;&#x6570;&#x636E;&#x7C7B;&#x578B;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text"><span id="&#x901A;&#x7528;&#x5957;&#x63A5;&#x5B57;&#x5730;&#x5740;&#x7ED3;&#x6784;">&#x901A;&#x7528;&#x5957;&#x63A5;&#x5B57;&#x5730;&#x5740;&#x7ED3;&#x6784;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text"><span id="ipv6&#x5957;&#x63A5;&#x5B57;&#x5730;&#x5740;&#x7ED3;&#x6784;">IPv6&#x5957;&#x63A5;&#x5B57;&#x5730;&#x5740;&#x7ED3;&#x6784;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">7.</span> <span class="toc-nav-text"><span id="&#x65B0;&#x7684;&#x901A;&#x7528;&#x5957;&#x63A5;&#x5B57;&#x5730;&#x5740;&#x7ED3;&#x6784;">&#x65B0;&#x7684;&#x901A;&#x7528;&#x5957;&#x63A5;&#x5B57;&#x5730;&#x5740;&#x7ED3;&#x6784;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">8.</span> <span class="toc-nav-text"><span id="&#x503C;-&#x7ED3;&#x679C;&#x53C2;&#x6570;">&#x503C;-&#x7ED3;&#x679C;&#x53C2;&#x6570;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">9.</span> <span class="toc-nav-text"><span id="&#x5B57;&#x8282;&#x6392;&#x5E8F;&#x51FD;&#x6570;">&#x5B57;&#x8282;&#x6392;&#x5E8F;&#x51FD;&#x6570;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">10.</span> <span class="toc-nav-text"><span id="&#x5B57;&#x8282;&#x64CD;&#x7EB5;&#x51FD;&#x6570;">&#x5B57;&#x8282;&#x64CD;&#x7EB5;&#x51FD;&#x6570;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">11.</span> <span class="toc-nav-text"><span id="&#x5730;&#x5740;&#x8F6C;&#x6362;&#x51FD;&#x6570;">&#x5730;&#x5740;&#x8F6C;&#x6362;&#x51FD;&#x6570;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">12.</span> <span class="toc-nav-text"><span id="&#x57FA;&#x672C;tcp&#x5957;&#x63A5;&#x5B57;&#x7F16;&#x7A0B;">&#x57FA;&#x672C;TCP&#x5957;&#x63A5;&#x5B57;&#x7F16;&#x7A0B;</span></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">12.1.</span> <span class="toc-nav-text"><span id="family&#x5E38;&#x503C;">family&#x5E38;&#x503C;</span></span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">12.2.</span> <span class="toc-nav-text"><span id="backlog">backlog</span></span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">13.</span> <span class="toc-nav-text"><span id="&#x5E76;&#x53D1;&#x670D;&#x52A1;&#x5668;">&#x5E76;&#x53D1;&#x670D;&#x52A1;&#x5668;</span></span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">14.</span> <span class="toc-nav-text"><span id="getsockname-&#x548C;-getpeername">getsockname &#x548C; getpeername</span></span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#socket" title="socket">socket</a>
+                        
+                          <a class="tag" href="/tags/#网络编程" title="网络编程">网络编程</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://github.com/TangBean" target="_blank">豆豆的GitHub</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/gothicll">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/C10H16">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Hazuki 2020 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://yoursite.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
